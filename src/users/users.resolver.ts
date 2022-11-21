@@ -23,14 +23,12 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.findOne(id);
+  findOne(@Args('id', { type: () => Int }) login: string) {
+    return this.usersService.findOne({ login });
   }
 
   @Mutation(() => User)
-  updateUser(
-    @Args('updateUserInput') updateUserInput: UpdateUserInput,
-  ) {
+  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(updateUserInput.id, updateUserInput);
   }
 

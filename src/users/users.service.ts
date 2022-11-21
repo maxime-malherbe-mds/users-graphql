@@ -18,31 +18,31 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserInput): Promise<User> {
-    const loginUsers = await this.findAll({ login: createUserDto.login });
-    if (loginUsers.length > 0) {
+  async create(createUserInput: CreateUserInput): Promise<User> {
+    const loginUsers = await this.findOne({ login: createUserInput.login });
+    if (!!loginUsers) {
       throw new ConflictException('existing login');
     }
     const emailUser = await this.usersRepository.findOneBy({
-      email: createUserDto.email,
+      email: createUserInput.email,
     });
     if (emailUser != null) {
       throw new ConflictException('existing email');
     }
 
     return this.usersRepository.save({
-      ...createUserDto,
+      ...createUserInput,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
   }
 
-  findAll(filter: ListFilter): Promise<User[]> {
-    return this.usersRepository.findBy(filter);
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOneById(id);
+  async findOne(filter: ListFilter): Promise<User> {
+    const user = await this.usersRepository.findOneBy(filter)
     if (user == null) {
       throw new NotFoundException('user not found');
     }

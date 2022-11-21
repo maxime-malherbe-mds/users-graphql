@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -15,6 +16,16 @@ import { UsersModule } from './users/users.module';
       playground: true,
     }),
     UsersModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      entities: [],
+      synchronize: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
